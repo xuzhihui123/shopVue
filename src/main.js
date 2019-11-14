@@ -5,6 +5,16 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+import 'normalize.css'
+
+import { Tabbar, TabbarItem } from 'vant';
+
+Vue.use(Tabbar).use(TabbarItem);
+
+import { NavBar } from 'vant';
+
+Vue.use(NavBar);
+
 new Vue({
   router,
   store,
