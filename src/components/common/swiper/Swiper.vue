@@ -1,8 +1,8 @@
 <template>
   <swiper :options="swiperOption" ref="mySwiper" >
     <!-- slides -->
-    <swiper-slide v-for="item in viewList" :key="item">
-      <img :src="item.image" alt />
+    <swiper-slide v-for="(item,index) in viewList" :key="index">
+      <img :src="item.image" alt @load="loadImage"/>
     </swiper-slide>
     <div class="swiper-pagination" slot="pagination"></div>
   </swiper>
@@ -14,6 +14,7 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 
 let vm = null;
 export default {
+  name:'Swiper',
   components: {
     swiper,
     swiperSlide
@@ -39,15 +40,23 @@ export default {
         speed: 1000,
         // delay:1000
         on: {
+          //切换到下一张的事件
           slideChange() {
             vm.index = this.activeIndex;
-            vm.$emit("getData", vm.index);
           }
         }
-      }
+      },
+      flag:false
     };
   },
-  methods: {},
+  methods: {
+    loadImage(){
+        if(this.flag==false){
+          this.$emit('loadImage')
+          this.flag=true
+        }
+    }
+  },
   props: {
     //传过来的轮播数据
     viewList: {
