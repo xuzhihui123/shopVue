@@ -39,6 +39,9 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+  #goodsdetail{
+    background-color: #fff;
+  }
 .title {
   padding-top: 10px;
   padding-left: 7px;

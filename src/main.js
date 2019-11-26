@@ -16,10 +16,9 @@ import { NavBar } from 'vant';
 
 Vue.use(NavBar);
 
-Vue.filter('dataFormat',(str,date='YYYY:MM:DD HH:mm:ss')=>{
+Vue.filter('dataFormat',(str,date='YYYY-MM-DD HH:mm:ss')=>{
   return moment(str).format(date)
 })
-
 
 
 new Vue({

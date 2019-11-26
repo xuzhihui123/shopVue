@@ -47,6 +47,10 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+  #goodsShopInfo{
+    background-color: #fff;
+    padding-bottom: 20px;
+  }
 .topTitle {
   padding-top: 40px;
   padding-left: 10px;

@@ -40,7 +40,7 @@ export default {
 </script>
 <style lang='less' scoped>
 #sing-goods-detail {
-  margin-top: 20px;
+  background-color: #fff;
   .title {
     // width: 100%;
     font-size: 14px;
