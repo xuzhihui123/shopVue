@@ -1,6 +1,6 @@
 <template>
   <div id="singlegood" @click="goDetail(singleData.iid)">
-    <img :src="singleData.show.img" alt @load="imgLoad" />
+    <img :src="showImg" alt @load="imgLoad" />
     <p>{{singleData.title}}</p>
     <p class="p2">
       <span class="price">{{singleData.price}}</span>
@@ -30,8 +30,15 @@ export default {
     singleData: {
       type: Object,
       default() {
-        return {};
+        return {
+
+        };
       }
+    }
+  },
+  computed:{
+    showImg(){
+        return this.singleData.image || this.singleData.show.img
     }
   }
 };

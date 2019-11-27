@@ -67,7 +67,7 @@ import "animate.css";
 /**
  * 外部JS导入
  */
-import { debounce } from "commonjs/utils";
+import {imgRefreshMixin} from "commonjs/mixin";
 
 export default {
   name: "Home",
@@ -79,6 +79,7 @@ export default {
     BScroll,
     GoTop
   },
+  mixins:[imgRefreshMixin],
   data() {
     return {
       bannerViewList: [],
@@ -148,6 +149,10 @@ export default {
       this.getHomeGoodsData(this.controlData);
       // 请求完成完成上拉加载
       this.$refs.bscroll.finishPullUp();
+
+      // 下面这句代码是activated钩子函数里的，但是报错就放这了
+      //这边用到了两次事件总线
+      this.$bus.$on('imgScrollRefresh',this.imgScrollR)
     },
 
     //更改gotop的隐藏显示
@@ -179,16 +184,15 @@ export default {
     this.getHomeGoodsData("sell");
   },
   mounted() {
-    this.$nextTick(() => {
-      // 防抖函数
-      const refresh = debounce(this.$refs.bscroll.refresh, 50);
-      this.$bus.$on("imgScrollRefresh", () => {
-        //图片加载一次就refresh 一次 调用BScroll的refresh的方法
-        refresh();
-      });
-    });
-  },
 
+  },
+  deactivated() {
+    //离开时候 取消imgScrollRefresh 事件总线
+    this.$bus.$off('imgScrollRefresh',this.imgScrollR)
+  },
+  activated() {
+
+  }
 };
 </script>
 <style lang='less' scoped>
