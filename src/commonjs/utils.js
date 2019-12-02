@@ -21,8 +21,21 @@ export function debounce(fn, delay) {
     }
 }
    
-
-
+//节流函数
+export function throttle(fn,wait){
+  var isExecute = false;
+  return function(){
+    var args = Array.prototype.slice.apply(arguments);
+    if(isExecute) {
+      return;
+    }
+    isExecute = true;
+    setTimeout(function(){
+      fn.apply(this,args);
+      isExecute = false
+    },wait)
+  }
+}
 
 export function getCount(data){
     let count = parseInt(data)

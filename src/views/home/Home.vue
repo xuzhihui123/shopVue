@@ -59,15 +59,14 @@ import TabControl from "content/tabcontrol/TabControl";
 import GoodsList from "views/home/children/goodslist/GoodsList";
 //导入BScroll
 import BScroll from "common/bscroll/BScroll";
-//导入gotop模块
-import GoTop from "views/home/children/gotop/GoTop";
+
 //导入animate.css
 import "animate.css";
 
 /**
  * 外部JS导入
  */
-import {imgRefreshMixin} from "commonjs/mixin";
+import {imgRefreshMixin,gotopMixin} from "commonjs/mixin";
 
 export default {
   name: "Home",
@@ -77,9 +76,8 @@ export default {
     TabControl,
     GoodsList,
     BScroll,
-    GoTop
   },
-  mixins:[imgRefreshMixin],
+  mixins:[imgRefreshMixin,gotopMixin],
   data() {
     return {
       bannerViewList: [],
@@ -100,7 +98,6 @@ export default {
       },
       controlList: ["流行", "新款", "精选"],
       controlData: "pop",
-      showFlag: false,
       tabControlTop: 0,
       tabControlTopFlag: false,
     };
@@ -155,15 +152,7 @@ export default {
       this.$bus.$on('imgScrollRefresh',this.imgScrollR)
     },
 
-    //更改gotop的隐藏显示
-    changeShowFlag(d) {
-      this.showFlag = d;
-    },
-    //gotop 页面回到顶部
-    myGoTop() {
-      // console.log('123');
-      this.$refs.bscroll.scrollTo(0, 0, 300);
-    },
+
     //获取轮播图图片加载完成后的事件 来计算tabcontrol组件的距离顶部位置的高度
     getLoadHeight() {
       this.tabControlTop = this.$refs.tabControl.$el.offsetTop;

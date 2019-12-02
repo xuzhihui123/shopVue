@@ -15,7 +15,8 @@
         <img src="~assets/back.svg" alt/>
       </div>
     </nav-bar>
-    <b-scroll class="wrapper" ref="bscroll" :myprobe-type="3" @changeTabControlState="offsetTop">
+    <b-scroll class="wrapper" ref="bscroll" :myprobe-type="3" @changeTabControlState="offsetTop"
+              @changeFlag="changeShowFlag">
       <!-- Swiper -->
       <swiper :view-list="swiperImages" class="swiper"/>
       <!-- goodsDetail模块 -->
@@ -31,6 +32,17 @@
       <!--      商品推荐-->
       <goods-list :goods-data="recommendDetail" ref="goodsList"/>
     </b-scroll>
+    <transition
+            enter-active-class="bounceIn"
+            leave-active-class="bounceOut"
+            :duration="{
+      enter:500,leave:500
+    }"
+    >
+      <go-top v-if="showFlag" class="animated" @click.native="myGoTop"/>
+    </transition>
+    <!--    底部操作栏-->
+    <bottom-control @addCar="addCar" ref="bottomControl"/>
   </div>
 </template>
 
@@ -62,11 +74,18 @@
   import DetailComment from 'views/detail/children/detailcomment/DetailComment'
   // 导入商品推荐
   import GoodsList from 'views/home/children/goodslist/GoodsList'
+  //导入bottomcontrol
+  import BottomControl from 'views/detail/children/bottomcontrol/BottomControl'
+  import 'animate.css'
+
+
   /**
    * utils
    */
-  import {getCount, debounce} from "commonjs/utils";
-  import {imgRefreshMixin} from "commonjs/mixin";
+  import {getCount,debounce,throttle} from "commonjs/utils";
+  import {imgRefreshMixin, gotopMixin} from "commonjs/mixin";
+
+  import  {mapActions} from  'vuex'
 
   export default {
     name: "Detail",
@@ -79,9 +98,10 @@
       SingleGoodsDetail,
       GoodsParams,
       DetailComment,
-      GoodsList
+      GoodsList,
+      BottomControl
     },
-    mixins: [imgRefreshMixin],
+    mixins: [imgRefreshMixin, gotopMixin],
     data() {
       return {
         iid: null,
@@ -107,7 +127,9 @@
         recommendDetail: [],
         //clickOffsetTop
         clickOffsetTop: [0, 0, 0, 0],
-        debounceT: null
+        debounceT: null,
+        //购物车节流
+        addCarThrottle:null
       };
     },
     methods: {
@@ -170,10 +192,10 @@
 
       //获取参数组件 距离顶部的高度
       getT() {
-      this.debounceT()
-    },
+        this.debounceT()
+      },
 
-    //滚动改变  navbar  索引
+      //滚动改变  navbar  索引
       offsetTop(pos) {
         // console.log(-pos.y);
         for (let i = 0; i < this.clickOffsetTop.length; i++) {
@@ -183,7 +205,14 @@
             this.activeIndex = i
           }
         }
-      }
+      },
+
+      //添加购物车
+      addCar() {
+       this.addCarThrottle()
+      },
+
+      ...mapActions(['addSingleGood'])
     },
     created() {
       //底部tababr消失
@@ -191,11 +220,26 @@
       this.getId();
       this.getDetail(this.iid);
       this.getRec()
+
       this.debounceT = debounce(function () {
         this.clickOffsetTop[1] = this.$refs.goodsParams.$el.offsetTop
         this.clickOffsetTop[2] = this.$refs.detailComment.$el.offsetTop
         this.clickOffsetTop[3] = this.$refs.goodsList.$el.offsetTop
       })
+
+      this.addCarThrottle = throttle(()=>{
+        let addToCar = {}
+        addToCar.iid = this.iid
+        addToCar.count = 1
+        addToCar.desc = this.goodsDetail.desc
+        addToCar.price = this.goodsDetail.nowPrice
+        addToCar.image =this.swiperImages[0].image
+        this.$toast.success({
+          message: '添加成功',
+          duration: 500
+        });
+       this.addSingleGood(addToCar)
+      },300)
     },
     mounted() {
       this.$nextTick(() => {
@@ -244,6 +288,6 @@
     top: 46px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 60px;
   }
 </style>

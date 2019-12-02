@@ -25,3 +25,26 @@ export const imgRefreshMixin ={
     }
   }
 }
+//导入gotop模块
+import GoTop from "views/home/children/gotop/GoTop";
+export const gotopMixin ={
+  methods:{
+    //更改gotop的隐藏显示
+    changeShowFlag(d) {
+      this.showFlag = d;
+    },
+    //gotop 页面回到顶部
+    myGoTop() {
+      // console.log('123');
+      this.$refs.bscroll.scrollTo(0, 0, 300);
+    },
+  },
+  data(){
+    return {
+      showFlag:false
+    }
+  },
+  components:{
+    GoTop
+  }
+}
